@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping(value = "v1/organization/{organizationId}/license")
@@ -52,7 +53,7 @@ public class LicenseController {
     }
 
     @GetMapping(value = "/")
-    public List<License> getLicenses(@PathVariable("organizationId") String organizationId) {
+    public List<License> getLicenses(@PathVariable("organizationId") String organizationId) throws TimeoutException {
         return licenseService.getLicensesByOrganization(organizationId);
     }
 }

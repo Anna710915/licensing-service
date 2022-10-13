@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: license
-  profiles: dev
-  cloud:
-    config:
-      uri: http://configserver:8071
