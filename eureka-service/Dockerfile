@@ -6,7 +6,7 @@ FROM openjdk:18.0 as build
 LABEL maintainer="Anna Merkul <anna.merkul@bk.ru>"
 
 # The application's jar file
-ARG JAR_FILE=target/eurekaserver-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/eureka-service-0.0.1-SNAPSHOT.jar
 
 # Add the application's jar to the container
 COPY ${JAR_FILE} application.jar

@@ -7,6 +7,7 @@
 		<module>eureka-service</module>
 		<module>license</module>
 		<module>configserver</module>
+		<module>organization-service</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

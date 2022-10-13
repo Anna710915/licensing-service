@@ -56,20 +56,19 @@ public class LicenseService {
     private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
         Organization organization = null;
         switch (clientType) {
-            case "feign" :
+            case "feign" -> {
                 System.out.println("I am using the feign client");
                 organization = organizationFeignClient.getOrganization(organizationId);
-                break;
-            case "rest":
+            }
+            case "rest" -> {
                 System.out.println("I am using the rest client");
                 organization = organizationRestClient.getOrganization(organizationId);
-                break;
-            case "discovery":
+            }
+            case "discovery" -> {
                 System.out.println("I am using the discovery client");
                 organization = organizationDiscoveryClient.getOrganization(organizationId);
-                break;
-            default:
-                organization = organizationRestClient.getOrganization(organizationId);
+            }
+            default -> organization = organizationRestClient.getOrganization(organizationId);
         }
         return organization;
     }

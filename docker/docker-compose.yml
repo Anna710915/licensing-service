@@ -44,6 +44,22 @@ services:
       backend:
         aliases:
           - "eurekaserver"
+  organizationservice:
+    image: docker.io/library/organizationimage
+    environment:
+      PROFILE: "dev"
+      CONFIGSERVER_URI: "http://configserver:8071"
+      CONFIGSERVER_PORT: "8071"
+      DATABASESERVER_PORT: "IMSYMMETRIC"
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
   license:
     image: docker.io/library/licenseimage
     environment:
