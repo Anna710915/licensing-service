@@ -111,8 +111,8 @@ services:
       backend:
         aliases:
           - "keycloak"
-  zookeepeer:
-    image: wurstmeister/zookeeper:latest
+  zookeeper:
+    image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
     networks:
@@ -129,21 +129,23 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CREATE_TOPICS=dresses:1:1,ratings:1:1
     volumes:
-      - "var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     depends_on:
-      - zookeepeer
+      - zookeeper
+    links:
+      - zookeeper:zookeeper
     networks:
       backend:
         aliases:
           - "kafka"
-  redisserver:
-      image: radis:alpine
-      ports:
-        - "6379:6379"
-      networks:
-        backend:
-          aliases:
-            - "redis"
+#  redisserver:
+#      image: radis:alpine
+#      ports:
+#        - "6379:6379"
+#      networks:
+#        backend:
+#          aliases:
+#            - "redis"
 networks:
   backend:
     driver: bridge

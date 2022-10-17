@@ -1,14 +1,20 @@
 package com.optimagrowth.licensingservice.config;
 
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
-@ConfigurationProperties(prefix = "example")
-@Configuration
-@Getter @Setter
+import org.springframework.stereotype.Component;
+
+@Component
+@Getter
 public class ServiceConfig {
 
-    private String property;
+    @Value("${example.property}")
+    private String exampleProperty;
+
+    @Value("${redis.server}")
+    private String redisServer="";
+
+    @Value("${redis.port}")
+    private String redisPort="";
 }
