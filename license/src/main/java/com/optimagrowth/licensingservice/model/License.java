@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="licenses")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class License extends RepresentationModel<License> {
+public class License {
 
     @Id
     @Column(name = "license_id", nullable = false)

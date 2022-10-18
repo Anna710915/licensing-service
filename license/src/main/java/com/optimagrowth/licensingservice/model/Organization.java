@@ -3,11 +3,16 @@ package com.optimagrowth.licensingservice.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.hateoas.RepresentationModel;
 
-@Getter @Setter @ToString
-public class Organization extends RepresentationModel<Organization> {
+import javax.persistence.Id;
 
+@Getter @Setter @ToString
+@RedisHash("organization")
+public class Organization {
+
+    @Id
     String id;
     String name;
     String contactName;

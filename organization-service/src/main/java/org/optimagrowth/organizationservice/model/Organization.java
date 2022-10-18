@@ -21,10 +21,10 @@ public class Organization {
     String name;
 
     @Column(name = "contact_name", nullable = false)
-    String contractName;
+    String contactName;
 
     @Column(name = "contact_email", nullable = false)
-    String contractEmail;
+    String contactEmail;
 
     @Column(name = "contact_phone", nullable = false)
     String contactPhone;

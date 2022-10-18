@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
@@ -32,7 +33,7 @@ import java.util.Locale;
 @RefreshScope
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.optimagrowth.licensingservice.service.client"})
-@EnableBinding(Sink.class)
+//@EnableBinding(Sink.class)
 public class LicensingServiceApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(LicensingServiceApplication.class);
@@ -40,22 +41,33 @@ public class LicensingServiceApplication {
 	@Autowired
 	private ServiceConfig serviceConfig;
 
+
+	public static void main(String[] args) {
+		SpringApplication.run(LicensingServiceApplication.class, args);
+	}
+
 	@Bean
-	JedisConnectionFactory jedisConnectionFactory () {
+	public JedisConnectionFactory jedisConnectionFactory() {
 		String hostname = serviceConfig.getRedisServer();
 		int port = Integer.parseInt(serviceConfig.getRedisPort());
+		logger.debug("hostname=" + hostname + " port=" + port);
 		RedisStandaloneConfiguration redisStandaloneConfiguration
 				= new RedisStandaloneConfiguration(hostname, port);
 		return new JedisConnectionFactory(redisStandaloneConfiguration);
 	}
-	public static void main(String[] args) {
-		SpringApplication.run(LicensingServiceApplication.class, args);
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate() {
+		RedisTemplate<String, Object> template = new RedisTemplate<>();
+		logger.debug("Redis");
+		template.setConnectionFactory(jedisConnectionFactory());
+		return template;
 	}
-	@StreamListener(Sink.INPUT)
-	public void loggerSink(OrganizationChangeModel orgChange) {
-		logger.debug("Received an {} event for organization id {}", orgChange.getAction(),
-				orgChange.getOrganizationId());
-	}
+//	@StreamListener(Sink.INPUT)
+//	public void loggerSink(OrganizationChangeModel orgChange) {
+//		logger.debug("Received an {} event for organization id {}", orgChange.getAction(),
+//				orgChange.getOrganizationId());
+//	}
 	@Bean
 	public LocaleResolver localResolver() {
 		SessionLocaleResolver localeResolver = new SessionLocaleResolver();

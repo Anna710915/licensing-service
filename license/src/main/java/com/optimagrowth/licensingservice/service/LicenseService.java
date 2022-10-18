@@ -57,7 +57,7 @@ public class LicenseService {
             license.setContactEmail(organization.getContactEmail());
             license.setContactPhone(organization.getContactPhone());
         }
-        return license.withComment(config.getProperty());
+        return license.withComment(config.getExampleProperty());
     }
 
     private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
@@ -89,7 +89,7 @@ public class LicenseService {
     public License createLicense(License license) {
         license.setLicenseId(UUID.randomUUID().toString());
         licenseRepository.save(license);
-        return license.withComment(config.getProperty());
+        return license.withComment(config.getExampleProperty());
     }
 
     @Transactional
@@ -106,7 +106,7 @@ public class LicenseService {
     @Transactional
     public License updateLicense(License license) {
         licenseRepository.save(license);
-        return license.withComment(config.getProperty());
+        return license.withComment(config.getExampleProperty());
     }
 
     @Transactional

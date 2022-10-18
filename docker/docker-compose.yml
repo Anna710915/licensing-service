@@ -138,14 +138,14 @@ services:
       backend:
         aliases:
           - "kafka"
-#  redisserver:
-#      image: radis:alpine
-#      ports:
-#        - "6379:6379"
-#      networks:
-#        backend:
-#          aliases:
-#            - "redis"
+  redisserver:
+      image: redis:alpine
+      ports:
+        - "6379:6379"
+      networks:
+        backend:
+          aliases:
+            - "redis"
 networks:
   backend:
     driver: bridge
