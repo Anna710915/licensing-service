@@ -146,12 +146,84 @@ services:
         backend:
           aliases:
             - "redis"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: elasticsearch
+    restart: unless-stopped
+    volumes:
+      - esdata1:/var/lib/elasticsearch/data
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ=Europe/Minsk
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+    ports:
+      - "9300:9300"
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      backend:
+        aliases:
+          - "elasticsearch"
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.7.0
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      SERVER_NAME: Kibana
+      TZ: Europe/Minsk
+    ports:
+      - "5604:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+          backend:
+            aliases:
+              - "kibana"
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.7.0
+    container_name: logstash
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    volumes:
+      - ./config:/etc/logstash/conf.d
+    ports:
+        - "5001:5001"
+    networks:
+      backend:
+        aliases:
+          - "logstash"
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - "ES_HOSTS=elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+    networks:
+      backend:
+        aliases:
+          - "zipkin"
 networks:
   backend:
     driver: bridge
 
 volumes:
   postgres:
+    driver: local
+  esdata1:
     driver: local
 
 

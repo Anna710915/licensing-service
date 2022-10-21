@@ -1,5 +1,6 @@
 package com.optimagrowth.gateway.filters;
 
+import brave.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class ResponseFilter {
     private static final Logger logger = LoggerFactory.getLogger(ResponseFilter.class);
 
     @Autowired
+    private Tracer tracer;
+    @Autowired
     private FilterUtils filterUtils;
 
     @Bean
@@ -22,7 +25,7 @@ public class ResponseFilter {
         return (exchange, chain) -> {
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 HttpHeaders requestHeaders = exchange.getRequest().getHeaders();
-                String correlationId = filterUtils.getCorrelationId(requestHeaders);
+                String correlationId = tracer.currentSpan().context().traceIdString();
                 logger.debug("Adding the correlation id to the outbound headers. {}", correlationId);
                 exchange.getResponse().getHeaders().add(FilterUtils.CORRELATION_ID, correlationId);
                 logger.debug("Completing outgoing request for {}.", exchange.getRequest().getURI());
