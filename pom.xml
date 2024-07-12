@@ -8,7 +8,8 @@
 		<module>license</module>
 		<module>configserver</module>
 		<module>organization-service</module>
-	</modules>
+        <module>gatewayserver</module>
+    </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

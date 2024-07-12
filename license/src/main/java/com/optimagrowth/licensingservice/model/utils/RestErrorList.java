@@ -1,7 +1,5 @@
 package com.optimagrowth.licensingservice.model.utils;
 
-
-
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
