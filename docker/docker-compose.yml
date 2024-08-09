@@ -100,13 +100,15 @@ services:
         aliases:
           - "gateway"
   keycloak:
-    image: jboss/keycloak
+    image: quay.io/keycloak/keycloak:25.0.1
     restart: always
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - "8080:8080"
+      - "8081:8080"
+    command:
+      - "start-dev"
     networks:
       backend:
         aliases:
@@ -129,7 +131,7 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CREATE_TOPICS=dresses:1:1,ratings:1:1
     volumes:
-      - "var/run/docker.sock:/var/run/docker.sock"
+      - kafka-data:/var/lib/kafka/data
     depends_on:
       - zookeepeer
     networks:
@@ -150,6 +152,8 @@ networks:
 
 volumes:
   postgres:
+    driver: local
+  kafka-data:
     driver: local
 
 
