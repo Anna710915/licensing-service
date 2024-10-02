@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-@SpringBootApplication
 @RefreshScope
+@SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.optimagrowth.licensingservice.service.client"})
 public class LicensingServiceApplication {

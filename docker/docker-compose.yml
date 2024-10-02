@@ -12,10 +12,6 @@ services:
       - postgres:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
       - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
-    networks:
-      backend:
-        aliases:
-          - "database"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -27,10 +23,6 @@ services:
       - "8071:8071"
     environment:
       ENCRYPT_KEY: "secretkey"
-    networks:
-      backend:
-        aliases:
-          - "configserver"
   eurekaserver:
     image: docker.io/library/eurekaimage
     ports:
@@ -40,10 +32,6 @@ services:
         condition: service_healthy
       configserver:
         condition: service_started
-    networks:
-      backend:
-        aliases:
-          - "eurekaserver"
   organizationservice:
     image: ostock/organization-service:0.0.1-SNAPSHOT
     environment:
@@ -58,8 +46,6 @@ services:
         condition: service_started
     ports:
       - "8081:8081"
-    networks:
-      - backend
   license:
     image: ostock/license:2.7.4
     environment:
@@ -75,8 +61,6 @@ services:
         condition: service_started
     ports:
       - "8180:8080"
-    networks:
-      - backend
   gatewayserver:
     image: ostock/gatewayserver:0.0.1-SNAPSHOT
     ports:
@@ -95,30 +79,22 @@ services:
         condition: service_started
       eurekaserver:
         condition: service_started
-    networks:
-      backend:
-        aliases:
-          - "gateway"
   keycloak:
-    image: jboss/keycloak
+    image: quay.io/keycloak/keycloak:25.0.1
     restart: always
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - "8080:8080"
-    networks:
-      backend:
-        aliases:
-          - "keycloak"
+      - "8081:8080"
+    command:
+      - "start-dev"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
   zookeepeer:
     image: wurstmeister/zookeeper:latest
     ports:
       - "2181:2181"
-    networks:
-      backend:
-        aliases:
-          - "zookeeper"
   kafkaserver:
     image: wurstmeister/kafka:latest
     ports:
@@ -129,27 +105,23 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CREATE_TOPICS=dresses:1:1,ratings:1:1
     volumes:
-      - "var/run/docker.sock:/var/run/docker.sock"
+      - kafka-data:/var/lib/kafka/data
     depends_on:
       - zookeepeer
-    networks:
-      backend:
-        aliases:
-          - "kafka"
   redisserver:
       image: radis:alpine
       ports:
         - "6379:6379"
-      networks:
-        backend:
-          aliases:
-            - "redis"
 networks:
-  backend:
-    driver: bridge
+  default:
+    name: "pet"
 
 volumes:
   postgres:
+    driver: local
+  kafka-data:
+    driver: local
+  keycloak_data:
     driver: local
 
 
