@@ -3,12 +3,11 @@ package org.optimagrowth.organizationservice.controller;
 import org.optimagrowth.organizationservice.model.Organization;
 import org.optimagrowth.organizationservice.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping(value = "v1/organization")
